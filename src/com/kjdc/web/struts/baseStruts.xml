@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <!-- 登录管理 --> 
+	<package name="login" namespace="/" extends="main">
+	    <!-- 获取用户登录时所需的验证码 -->
+		<action name="randomCode" class="com.kjdc.web.action.base.RandomCodeAction">
+			<result name="success" type="stream">
+				<param name="contentType">image/jpeg</param>
+				<param name="inputName">inputStream</param>
+			</result>
+			<result name="error">/index.jsp</result>
+		</action>
+
+	    <!-- 登录系统 -->
+		<action name="login_*" class="com.kjdc.web.action.base.LoginAction" method="{1}">
+		    <!-- 管理员登录成功，进入后台首页 -->
+		    <result name="loginSuccess">/WEB-INF/page/admin/index.jsp</result>
+		    <!-- 管理员登录失败，返回登录页面 -->
+			<result name="login">login.jsp</result>
+
+		</action>
+
+		 <!-- 退出系统 -->
+		<action name="logout_*" class="com.kjdc.web.action.base.LoginAction" method="{1}">
+		    <!-- 登录超时和Session权限的拦截器栈 -->
+			<interceptor-ref name="sessionTimeOutStack" />
+			<result name="timeout">/timeout.jsp</result>
+		    <!-- 进入退出系统确认页面  -->
+			<result name="confirm">/WEB-INF/page/admin/logoutConfirm.jsp</result>
+			<result name="success">/login.jsp</result>
+			<result name="error">/login.jsp</result>
+		</action>
+
+		<!-- 管理后台登录页面 -->
+		<action name="admin">
+			<!-- 用浏览器重定向技术进入管理后台登录页面 -->
+			<result type="redirect">login.jsp</result>
+		</action>
+	</package>
+    
+    <!-- 系统菜单管理 -->
+    <package name="menu" namespace="/" extends="main,json">
+       <action name="menu_*" class="com.kjdc.web.action.base.SysMenuAction" method="{1}">
+            <!-- 登录超时和Session权限的拦截器栈 -->
+			<interceptor-ref name="sessionTimeOutStack" />
+			<result name="timeout">/timeout.jsp</result>
+			<result name="success">/WEB-INF/page/admin/ajaxDone.jsp</result>
+			<result name="error">/WEB-INF/page/admin/ajaxDone.jsp</result>
+            <result name="list">/WEB-INF/page/admin/base/menu/list.jsp</result>
+            <result name="add">/WEB-INF/page/admin/base/menu/add.jsp</result>
+            <result name="view">/WEB-INF/page/admin/base/menu/view.jsp</result>
+            <result name="edit">/WEB-INF/page/admin/base/menu/edit.jsp</result>
+		</action>
+    </package>
+    
+    <!-- 角色管理 -->
+    <package name="role" namespace="/" extends="main,json">
+       <action name="role_*" class="com.kjdc.web.action.base.RoleInfoAction" method="{1}">
+            <!-- 登录超时和Session权限的拦截器栈 -->
+			<interceptor-ref name="sessionTimeOutStack" />
+			<result name="timeout">/timeout.jsp</result>
+			<result name="success">/WEB-INF/page/admin/ajaxDone.jsp</result>
+			<result name="error">/WEB-INF/page/admin/ajaxDone.jsp</result>
+            <result name="list">/WEB-INF/page/admin/base/role/list.jsp</result>
+            <result name="add">/WEB-INF/page/admin/base/role/add.jsp</result>
+            <result name="set">/WEB-INF/page/admin/base/role/set.jsp</result>
+            <result name="view">/WEB-INF/page/admin/base/role/view.jsp</result>
+            <result name="edit">/WEB-INF/page/admin/base/role/edit.jsp</result>
+		</action>
+    </package>
+    
+</struts>
